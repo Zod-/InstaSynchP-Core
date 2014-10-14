@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.0.1
+// @version     1.0.2
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     GPL-3.0
@@ -17,8 +17,11 @@
 
 // @require     https://greasyfork.org/scripts/2855-gm-config/code/GM_config.js
 // @require     https://greasyfork.org/scripts/2859-video-url-parser/code/Video%20Url%20Parser.js
+
 // @require     https://greasyfork.org/scripts/5647-instasynchp-library/code/InstaSynchP%20Library.js
-/* for Event Hooks */
+// @require     https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/InstaSynchP%20CSSLoader.js
+// @require     https://greasyfork.org/scripts/5719-instasynchp-settings/code/InstaSynchP%20Settings.js
+
 // @require     https://greasyfork.org/scripts/2857-jquery-bind-first/code/jquerybind-first.js
 // @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/InstaSynchP%20Event%20Hooks.js
 // ==/UserScript==
@@ -74,7 +77,6 @@ window.events = (function () {
         },
         //fire the event with the given parameters
         'fire': function (eventName, parameters, preOld) {
-            window.console.log(eventName);
             var i,
                 listenersCopy;
             if (listeners[eventName] === undefined) {
@@ -136,7 +138,9 @@ window.addEventListener('load', function () {
             }
         }
         //these need to be executed last
+    events.on('ExecuteOnce', window.plugins.cssLoader.executeOnceCore);
     events.on('ExecuteOnce', window.plugins.eventBase.executeOnceCore);
+    events.on('ExecuteOnce', window.plugins.settings.executeOnceCore);
     events.once('Userlist', function () {
         events.fire('PostConnect');
     });
