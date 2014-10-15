@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.0.2
+// @version     1.0.3
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     GPL-3.0
@@ -25,90 +25,103 @@
 // @require     https://greasyfork.org/scripts/2857-jquery-bind-first/code/jquerybind-first.js
 // @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/InstaSynchP%20Event%20Hooks.js
 // ==/UserScript==
-
-window.events = (function () {
+function Core(version) {
     "use strict";
-    var listeners = {};
+    this.version = version;
+}
 
-    return {
-        //bind event handlers
-        'on': function (eventName, callback, preOld) {
-            eventName = eventName.trim();
-            if (listeners[eventName] === undefined) {
-                listeners[eventName] = {
-                    'preOld': [],
-                    'postOld': []
-                };
-            }
-            //execute it before are after the overwritten function
-            if (preOld) {
-                listeners[eventName].preOld.push({
-                    callback: callback
-                });
-            } else {
-                listeners[eventName].postOld.push({
-                    callback: callback
-                });
-            }
-        },
-        //bind event handler and remove any previous once
-        'once': function (eventName, callback, preOld) {
-            this.unbind(eventName, callback);
-            this.on(eventName, callback, preOld);
-        },
-        //unbind event handlers
-        'unbind': function (eventName, callback) {
-            var i;
-            //search all occurences of callback and remove it
-            if (listeners[eventName] !== undefined) {
-                for (i = 0; i < listeners[eventName].preOld.length; i += 1) {
-                    if (listeners[eventName].preOld[i].callback === callback) {
-                        listeners[eventName].preOld.splice(i, 1);
-                        i -= 1;
+function coreRef(){
+    return window.plugins.core;
+}
+
+Core.prototype.executeOnceCore = function () {
+    window.events = (function () {
+        var listeners = {};
+
+        return {
+            //bind event handlers
+            'on': function (eventName, callback, preOld) {
+                eventName = eventName.trim();
+                if (listeners[eventName] === undefined) {
+                    listeners[eventName] = {
+                        'preOld': [],
+                        'postOld': []
+                    };
+                }
+                //execute it before are after the overwritten function
+                if (preOld) {
+                    listeners[eventName].preOld.push({
+                        callback: callback
+                    });
+                } else {
+                    listeners[eventName].postOld.push({
+                        callback: callback
+                    });
+                }
+            },
+            //bind event handler and remove any previous once
+            'once': function (eventName, callback, preOld) {
+                this.unbind(eventName, callback);
+                this.on(eventName, callback, preOld);
+            },
+            //unbind event handlers
+            'unbind': function (eventName, callback) {
+                var i;
+                //search all occurences of callback and remove it
+                if (listeners[eventName] !== undefined) {
+                    for (i = 0; i < listeners[eventName].preOld.length; i += 1) {
+                        if (listeners[eventName].preOld[i].callback === callback) {
+                            listeners[eventName].preOld.splice(i, 1);
+                            i -= 1;
+                        }
+                    }
+                    for (i = 0; i < listeners[eventName].postOld.length; i += 1) {
+                        if (listeners[eventName].postOld[i].callback === callback) {
+                            listeners[eventName].postOld.splice(i, 1);
+                            i -= 1;
+                        }
                     }
                 }
-                for (i = 0; i < listeners[eventName].postOld.length; i += 1) {
-                    if (listeners[eventName].postOld[i].callback === callback) {
-                        listeners[eventName].postOld.splice(i, 1);
-                        i -= 1;
+            },
+            //fire the event with the given parameters
+            'fire': function (eventName, parameters, preOld) {
+                var i,
+                    listenersCopy;
+                if (listeners[eventName] === undefined) {
+                    return;
+                }
+                //make a copy of the listener list since some handlers
+                //could remove listeners changing the length of the array
+                //while iterating over it
+                if (preOld) {
+                    listenersCopy = [].concat(listeners[eventName].preOld);
+                } else {
+                    listenersCopy = [].concat(listeners[eventName].postOld);
+                }
+                //fire the events and catch possible errors
+                for (i = 0; i < listenersCopy.length; i += 1) {
+                    try {
+                        listenersCopy[i].callback.apply(this, parameters);
+                    } catch (err) {
+                        window.console.log(
+                            ("Error: {0}, eventName {1}, function {2} %s %s %o, " +
+                                "please check the console " +
+                                "and make a pastebin of everything in there").format(
+                                err.message, eventName, listenersCopy[i].callback.name),
+                            listenersCopy[i].callback, err.stack, err);
                     }
                 }
             }
-        },
-        //fire the event with the given parameters
-        'fire': function (eventName, parameters, preOld) {
-            var i,
-                listenersCopy;
-            if (listeners[eventName] === undefined) {
-                return;
-            }
-            //make a copy of the listener list since some handlers
-            //could remove listeners changing the length of the array
-            //while iterating over it
-            if (preOld) {
-                listenersCopy = [].concat(listeners[eventName].preOld);
-            } else {
-                listenersCopy = [].concat(listeners[eventName].postOld);
-            }
-            //fire the events and catch possible errors
-            for (i = 0; i < listenersCopy.length; i += 1) {
-                try {
-                    listenersCopy[i].callback.apply(this, parameters);
-                } catch (err) {
-                    window.console.log(
-                        ("Error: {0}, eventName {1}, function {2} %s %s %o, " +
-                            "please check the console " +
-                            "and make a pastebin of everything in there").format(
-                            err.message, eventName, listenersCopy[i].callback.name),
-                        listenersCopy[i].callback, err.stack, err);
-                }
-            }
-        }
-    };
-}());
+        };
+    }());
+};
 
-window.addEventListener('load', function () {
+Core.prototype.main = function () {
     "use strict";
+    var th = coreRef();
+    th.executeOnceCore();
+    events.on('ExecuteOnce', window.plugins.cssLoader.executeOnceCore);
+    events.on('ExecuteOnce', window.plugins.settings.executeOnceCore);
     //prepare plugins
     for (var pluginName in window.plugins) {
         if (window.plugins.hasOwnProperty(pluginName)) {
@@ -121,6 +134,9 @@ window.addEventListener('load', function () {
             }
             if (plugin.executeOnce) {
                 events.on('ExecuteOnce', plugin.executeOnce);
+            }
+            if (plugin.settings instanceof Array) {
+                window.plugins.settings.fields = window.plugins.settings.fields.concat(plugin.settings);
             }
         }
     }
@@ -138,9 +154,7 @@ window.addEventListener('load', function () {
             }
         }
         //these need to be executed last
-    events.on('ExecuteOnce', window.plugins.cssLoader.executeOnceCore);
     events.on('ExecuteOnce', window.plugins.eventBase.executeOnceCore);
-    events.on('ExecuteOnce', window.plugins.settings.executeOnceCore);
     events.once('Userlist', function () {
         events.fire('PostConnect');
     });
@@ -151,4 +165,8 @@ window.addEventListener('load', function () {
     //reload the scripts when changing a room
     events.on('LoadRoom', load);
 
-}, false);
+};
+
+window.plugins = window.plugins || {};
+window.plugins.core = new Core("1.0.3");
+window.addEventListener('load', coreRef().main, false);
