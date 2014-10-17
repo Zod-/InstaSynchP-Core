@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.0.4
+// @version     1.0.5
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     GPL-3.0
@@ -135,7 +135,7 @@ Core.prototype.main = function () {
             if (plugin.executeOnce) {
                 events.on('ExecuteOnce', plugin.executeOnce);
             }
-            if (plugin.settings instanceof Array) {
+            if (Object.prototype.toString.call(plugin.settings) === '[object Array]') {
                 window.plugins.settings.fields = window.plugins.settings.fields.concat(plugin.settings);
             }
         }
@@ -170,5 +170,5 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core("1.0.4");
+window.plugins.core = new Core("1.0.5");
 window.addEventListener('load', coreRef().main, false);
