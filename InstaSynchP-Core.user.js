@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.0.3
+// @version     1.0.4
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     GPL-3.0
@@ -28,33 +28,33 @@
 function Core(version) {
     "use strict";
     this.version = version;
+    this.listeners = {};
 }
 
-function coreRef(){
+function coreRef() {
     return window.plugins.core;
 }
 
 Core.prototype.executeOnceCore = function () {
+    var th = coreRef();
     window.events = (function () {
-        var listeners = {};
-
         return {
             //bind event handlers
             'on': function (eventName, callback, preOld) {
                 eventName = eventName.trim();
-                if (listeners[eventName] === undefined) {
-                    listeners[eventName] = {
+                if (th.listeners[eventName] === undefined) {
+                    th.listeners[eventName] = {
                         'preOld': [],
                         'postOld': []
                     };
                 }
                 //execute it before are after the overwritten function
                 if (preOld) {
-                    listeners[eventName].preOld.push({
+                    th.listeners[eventName].preOld.push({
                         callback: callback
                     });
                 } else {
-                    listeners[eventName].postOld.push({
+                    th.listeners[eventName].postOld.push({
                         callback: callback
                     });
                 }
@@ -68,16 +68,16 @@ Core.prototype.executeOnceCore = function () {
             'unbind': function (eventName, callback) {
                 var i;
                 //search all occurences of callback and remove it
-                if (listeners[eventName] !== undefined) {
-                    for (i = 0; i < listeners[eventName].preOld.length; i += 1) {
-                        if (listeners[eventName].preOld[i].callback === callback) {
-                            listeners[eventName].preOld.splice(i, 1);
+                if (th.listeners[eventName] !== undefined) {
+                    for (i = 0; i < th.listeners[eventName].preOld.length; i += 1) {
+                        if (th.listeners[eventName].preOld[i].callback === callback) {
+                            th.listeners[eventName].preOld.splice(i, 1);
                             i -= 1;
                         }
                     }
-                    for (i = 0; i < listeners[eventName].postOld.length; i += 1) {
-                        if (listeners[eventName].postOld[i].callback === callback) {
-                            listeners[eventName].postOld.splice(i, 1);
+                    for (i = 0; i < th.listeners[eventName].postOld.length; i += 1) {
+                        if (th.listeners[eventName].postOld[i].callback === callback) {
+                            th.listeners[eventName].postOld.splice(i, 1);
                             i -= 1;
                         }
                     }
@@ -87,16 +87,16 @@ Core.prototype.executeOnceCore = function () {
             'fire': function (eventName, parameters, preOld) {
                 var i,
                     listenersCopy;
-                if (listeners[eventName] === undefined) {
+                if (th.listeners[eventName] === undefined) {
                     return;
                 }
                 //make a copy of the listener list since some handlers
                 //could remove listeners changing the length of the array
                 //while iterating over it
                 if (preOld) {
-                    listenersCopy = [].concat(listeners[eventName].preOld);
+                    listenersCopy = [].concat(th.listeners[eventName].preOld);
                 } else {
-                    listenersCopy = [].concat(listeners[eventName].postOld);
+                    listenersCopy = [].concat(th.listeners[eventName].postOld);
                 }
                 //fire the events and catch possible errors
                 for (i = 0; i < listenersCopy.length; i += 1) {
@@ -161,12 +161,14 @@ Core.prototype.main = function () {
     //execute one time only scripts
     events.fire('ExecuteOnce');
     //load the scripts
-    load();
+    if (global.page.name !== 'index') {
+        load();
+    }
     //reload the scripts when changing a room
     events.on('LoadRoom', load);
 
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core("1.0.3");
+window.plugins.core = new Core("1.0.4");
 window.addEventListener('load', coreRef().main, false);
