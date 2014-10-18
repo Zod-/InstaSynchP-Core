@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.0.5
+// @version     1.0.6
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     GPL-3.0
@@ -24,6 +24,8 @@
 
 // @require     https://greasyfork.org/scripts/2857-jquery-bind-first/code/jquerybind-first.js
 // @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/InstaSynchP%20Event%20Hooks.js
+
+// @require     https://greasyfork.org/scripts/2858-jquery-fullscreen/code/jqueryfullscreen.js
 // ==/UserScript==
 function Core(version) {
     "use strict";
@@ -170,5 +172,5 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core("1.0.5");
+window.plugins.core = new Core("1.0.6");
 window.addEventListener('load', coreRef().main, false);
