@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.0.6
+// @version     1.0.7
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     GPL-3.0
@@ -31,6 +31,7 @@ function Core(version) {
     "use strict";
     this.version = version;
     this.listeners = {};
+    this.connected = false;
 }
 
 function coreRef() {
@@ -118,6 +119,11 @@ Core.prototype.executeOnceCore = function () {
     }());
 };
 
+Core.prototype.resetVariables = function () {
+    "use strict";
+    this.connected = false;
+};
+
 Core.prototype.main = function () {
     "use strict";
     var th = coreRef();
@@ -137,6 +143,9 @@ Core.prototype.main = function () {
             if (plugin.executeOnce) {
                 events.on('ExecuteOnce', plugin.executeOnce);
             }
+            if (plugin.resetVariables) {
+                events.on('ResetVariables', plugin.resetVariables);
+            }
             if (Object.prototype.toString.call(plugin.settings) === '[object Array]') {
                 window.plugins.settings.fields = window.plugins.settings.fields.concat(plugin.settings);
             }
@@ -152,12 +161,14 @@ Core.prototype.main = function () {
 
             //if the script was loading slow and we are already connected
             if (window.userInfo) {
+                th.connected = true;
                 events.fire('PostConnect');
             }
         }
         //these need to be executed last
     events.on('ExecuteOnce', window.plugins.eventBase.executeOnceCore);
     events.once('Userlist', function () {
+        th.connected = true;
         events.fire('PostConnect');
     });
     //execute one time only scripts
@@ -172,5 +183,5 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core("1.0.6");
+window.plugins.core = new Core("1.0.7");
 window.addEventListener('load', coreRef().main, false);
