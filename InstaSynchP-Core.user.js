@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.0.7
+// @version     1.0.8
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     GPL-3.0
@@ -43,45 +43,52 @@ Core.prototype.executeOnceCore = function () {
     window.events = (function () {
         return {
             //bind event handlers
-            'on': function (eventName, callback, preOld) {
-                eventName = eventName.trim();
-                if (th.listeners[eventName] === undefined) {
-                    th.listeners[eventName] = {
-                        'preOld': [],
-                        'postOld': []
-                    };
-                }
-                //execute it before are after the overwritten function
-                if (preOld) {
-                    th.listeners[eventName].preOld.push({
-                        callback: callback
-                    });
-                } else {
-                    th.listeners[eventName].postOld.push({
-                        callback: callback
-                    });
+            'on': function (events, callback, preOld) {
+                var arr = events.split(',');
+                for (var i = 0; i < arr.length; i += 1) {
+                    eventName = arr[i].trim();
+                    if (th.listeners[eventName] === undefined) {
+                        th.listeners[eventName] = {
+                            'preOld': [],
+                            'postOld': []
+                        };
+                    }
+                    //execute it before are after the overwritten function
+                    if (preOld) {
+                        th.listeners[eventName].preOld.push({
+                            callback: callback
+                        });
+                    } else {
+                        th.listeners[eventName].postOld.push({
+                            callback: callback
+                        });
+                    }
                 }
             },
             //bind event handler and remove any previous once
-            'once': function (eventName, callback, preOld) {
-                this.unbind(eventName, callback);
-                this.on(eventName, callback, preOld);
+            'once': function (events, callback, preOld) {
+                this.unbind(events, callback);
+                this.on(events, callback, preOld);
             },
             //unbind event handlers
-            'unbind': function (eventName, callback) {
-                var i;
-                //search all occurences of callback and remove it
-                if (th.listeners[eventName] !== undefined) {
-                    for (i = 0; i < th.listeners[eventName].preOld.length; i += 1) {
-                        if (th.listeners[eventName].preOld[i].callback === callback) {
-                            th.listeners[eventName].preOld.splice(i, 1);
-                            i -= 1;
+            'unbind': function (events, callback) {
+                var arr = events.split(','),
+                    j;
+                for (var i = 0; i < arr.length; i += 1) {
+                    eventName = arr[i].trim();
+                    //search all occurences of callback and remove it
+                    if (th.listeners[eventName] !== undefined) {
+                        for (j = 0; j < th.listeners[eventName].preOld.length; j += 1) {
+                            if (th.listeners[eventName].preOld[j].callback === callback) {
+                                th.listeners[eventName].preOld.splice(j, 1);
+                                j -= 1;
+                            }
                         }
-                    }
-                    for (i = 0; i < th.listeners[eventName].postOld.length; i += 1) {
-                        if (th.listeners[eventName].postOld[i].callback === callback) {
-                            th.listeners[eventName].postOld.splice(i, 1);
-                            i -= 1;
+                        for (j = 0; j < th.listeners[eventName].postOld.length; j += 1) {
+                            if (th.listeners[eventName].postOld[j].callback === callback) {
+                                th.listeners[eventName].postOld.splice(j, 1);
+                                j -= 1;
+                            }
                         }
                     }
                 }
@@ -130,6 +137,9 @@ Core.prototype.main = function () {
     th.executeOnceCore();
     events.on('ExecuteOnce', window.plugins.cssLoader.executeOnceCore);
     events.on('ExecuteOnce', window.plugins.settings.executeOnceCore);
+    events.on('PreConnect,Disconnect', function () {
+        events.fire('ResetVariables');
+    });
     //prepare plugins
     for (var pluginName in window.plugins) {
         if (window.plugins.hasOwnProperty(pluginName)) {
@@ -183,5 +193,5 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core("1.0.7");
+window.plugins.core = new Core("1.0.8");
 window.addEventListener('load', coreRef().main, false);
