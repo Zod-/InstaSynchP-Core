@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.0.8
+// @version     1.0.9
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     GPL-3.0
@@ -34,18 +34,17 @@ function Core(version) {
     this.connected = false;
 }
 
-function coreRef() {
-    return window.plugins.core;
-}
-
 Core.prototype.executeOnceCore = function () {
-    var th = coreRef();
-    window.events = (function () {
+    "use strict";
+    var th = this;
+    events = (function () {
         return {
             //bind event handlers
-            'on': function (events, callback, preOld) {
-                var arr = events.split(',');
-                for (var i = 0; i < arr.length; i += 1) {
+            'on': function (ref, events, callback, preOld) {
+                var arr = events.split(','),
+                    eventName,
+                    i;
+                for (i = 0; i < arr.length; i += 1) {
                     eventName = arr[i].trim();
                     if (th.listeners[eventName] === undefined) {
                         th.listeners[eventName] = {
@@ -56,25 +55,28 @@ Core.prototype.executeOnceCore = function () {
                     //execute it before are after the overwritten function
                     if (preOld) {
                         th.listeners[eventName].preOld.push({
+                            ref: ref,
                             callback: callback
                         });
                     } else {
                         th.listeners[eventName].postOld.push({
+                            ref: ref,
                             callback: callback
                         });
                     }
                 }
             },
             //bind event handler and remove any previous once
-            'once': function (events, callback, preOld) {
+            'once': function (ref, events, callback, preOld) {
                 this.unbind(events, callback);
-                this.on(events, callback, preOld);
+                this.on(ref, events, callback, preOld);
             },
             //unbind event handlers
             'unbind': function (events, callback) {
                 var arr = events.split(','),
-                    j;
-                for (var i = 0; i < arr.length; i += 1) {
+                    eventName,
+                    i, j;
+                for (i = 0; i < arr.length; i += 1) {
                     eventName = arr[i].trim();
                     //search all occurences of callback and remove it
                     if (th.listeners[eventName] !== undefined) {
@@ -111,7 +113,7 @@ Core.prototype.executeOnceCore = function () {
                 //fire the events and catch possible errors
                 for (i = 0; i < listenersCopy.length; i += 1) {
                     try {
-                        listenersCopy[i].callback.apply(this, parameters);
+                        listenersCopy[i].callback.apply(listenersCopy[i].ref, parameters);
                     } catch (err) {
                         window.console.log(
                             ("Error: {0}, eventName {1}, function {2} %s %s %o, " +
@@ -133,11 +135,11 @@ Core.prototype.resetVariables = function () {
 
 Core.prototype.main = function () {
     "use strict";
-    var th = coreRef();
+    var th = this;
     th.executeOnceCore();
-    events.on('ExecuteOnce', window.plugins.cssLoader.executeOnceCore);
-    events.on('ExecuteOnce', window.plugins.settings.executeOnceCore);
-    events.on('PreConnect,Disconnect', function () {
+    events.on(window.plugins.cssLoader, 'ExecuteOnce', window.plugins.cssLoader.executeOnceCore);
+    events.on(window.plugins.settings, 'ExecuteOnce', window.plugins.settings.executeOnceCore);
+    events.on(th, 'PreConnect,Disconnect', function () {
         events.fire('ResetVariables');
     });
     //prepare plugins
@@ -145,16 +147,16 @@ Core.prototype.main = function () {
         if (window.plugins.hasOwnProperty(pluginName)) {
             var plugin = window.plugins[pluginName];
             if (plugin.preConnect) {
-                events.on('PreConnect', plugin.preConnect);
+                events.on(plugin, 'PreConnect', plugin.preConnect);
             }
             if (plugin.postConnect) {
-                events.on('PostConnect', plugin.postConnect);
+                events.on(plugin, 'PostConnect', plugin.postConnect);
             }
             if (plugin.executeOnce) {
-                events.on('ExecuteOnce', plugin.executeOnce);
+                events.on(plugin, 'ExecuteOnce', plugin.executeOnce);
             }
             if (plugin.resetVariables) {
-                events.on('ResetVariables', plugin.resetVariables);
+                events.on(plugin, 'ResetVariables', plugin.resetVariables);
             }
             if (Object.prototype.toString.call(plugin.settings) === '[object Array]') {
                 window.plugins.settings.fields = window.plugins.settings.fields.concat(plugin.settings);
@@ -176,8 +178,8 @@ Core.prototype.main = function () {
             }
         }
         //these need to be executed last
-    events.on('ExecuteOnce', window.plugins.eventBase.executeOnceCore);
-    events.once('Userlist', function () {
+    events.on(window.plugins.eventHooks, 'ExecuteOnce', window.plugins.eventHooks.executeOnceCore);
+    events.once(th, 'Userlist', function () {
         th.connected = true;
         events.fire('PostConnect');
     });
@@ -188,10 +190,11 @@ Core.prototype.main = function () {
         load();
     }
     //reload the scripts when changing a room
-    events.on('LoadRoom', load);
-
+    events.on(th, 'LoadRoom', load);
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core("1.0.8");
-window.addEventListener('load', coreRef().main, false);
+window.plugins.core = new Core("1.0.9");
+window.addEventListener('load', function () {
+    window.plugins.core.main();
+}, false);
