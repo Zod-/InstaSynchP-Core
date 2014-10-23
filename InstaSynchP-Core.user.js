@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.0.9
+// @version     1.1
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     GPL-3.0
@@ -37,11 +37,11 @@ function Core(version) {
 Core.prototype.executeOnceCore = function () {
     "use strict";
     var th = this;
-    events = (function () {
+    window.events = (function () {
         return {
             //bind event handlers
-            'on': function (ref, events, callback, preOld) {
-                var arr = events.split(','),
+            'on': function (ref, eventNames, callback, preOld) {
+                var arr = eventNames.split(','),
                     eventName,
                     i;
                 for (i = 0; i < arr.length; i += 1) {
@@ -67,13 +67,13 @@ Core.prototype.executeOnceCore = function () {
                 }
             },
             //bind event handler and remove any previous once
-            'once': function (ref, events, callback, preOld) {
-                this.unbind(events, callback);
-                this.on(ref, events, callback, preOld);
+            'once': function (ref, eventNames, callback, preOld) {
+                this.unbind(eventNames, callback);
+                this.on(ref, eventNames, callback, preOld);
             },
             //unbind event handlers
-            'unbind': function (events, callback) {
-                var arr = events.split(','),
+            'unbind': function (eventNames, callback) {
+                var arr = eventNames.split(','),
                     eventName,
                     i, j;
                 for (i = 0; i < arr.length; i += 1) {
@@ -194,7 +194,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core("1.0.9");
+window.plugins.core = new Core("1.1");
 window.addEventListener('load', function () {
     window.plugins.core.main();
 }, false);
