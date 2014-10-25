@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.1
+// @version     1.1.1
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     GPL-3.0
@@ -30,6 +30,7 @@
 function Core(version) {
     "use strict";
     this.version = version;
+    this.name = 'InstaSynchP Core';
     this.listeners = {};
     this.connected = false;
 }
@@ -194,7 +195,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core("1.1");
+window.plugins.core = new Core('1.1.1');
 window.addEventListener('load', function () {
     window.plugins.core.main();
 }, false);
