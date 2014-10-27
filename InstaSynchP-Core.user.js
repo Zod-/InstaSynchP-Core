@@ -6,7 +6,7 @@
 // @version     1.1.1
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
-// @license     GPL-3.0
+// @license     MIT
 
 // @include     http://*.instasynch.com/*
 // @include     http://instasynch.com/*
