@@ -9,6 +9,7 @@ Includes
 * [InstaSynchP CSSLoader](https://greasyfork.org/en/scripts/5718-instasynchp-cssloader)
 * [InstaSynchP Settings](https://greasyfork.org/en/scripts/5719-instasynchp-settings)
 * [InstaSynchP Event Hooks](https://greasyfork.org/en/scripts/5651-instasynchp-event-hooks)
+* [InstaSynchP Commands](https://greasyfork.org/en/scripts/6332-instasynchp-commands)
 
 Framework
 ---------
@@ -68,9 +69,14 @@ Events
 -----------
 See  [InstaSynchP Event Hooks](https://greasyfork.org/en/scripts/5651-instasynchp-event-hooks)
 
+Commands
+-----------
+The core will look for commands in `plugin.commands`<br>
+See  [InstaSynchP Commands](https://greasyfork.org/en/scripts/6332-instasynchp-commands)
+
 Settings
 -----------
-The core will look for settings in 'plugin.setting'<br>
+The core will look for settings in `plugin.settings`<br>
 See  [InstaSynchP Settings](https://greasyfork.org/en/scripts/5719-instasynchp-settings)
 
 CSSLoader
