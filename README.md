@@ -10,6 +10,7 @@ Includes
 * [InstaSynchP Settings](https://greasyfork.org/en/scripts/5719-instasynchp-settings)
 * [InstaSynchP Event Hooks](https://greasyfork.org/en/scripts/5651-instasynchp-event-hooks)
 * [InstaSynchP Commands](https://greasyfork.org/en/scripts/6332-instasynchp-commands)
+* [InstaSynchP Plugin Manager](https://greasyfork.org/en/scripts/6573-instasynchp-plugin-manager)
 
 Framework
 ---------

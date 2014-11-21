@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.1.2
+// @version     1.1.3
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -22,6 +22,7 @@
 // @require     https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/InstaSynchP%20CSSLoader.js
 // @require     https://greasyfork.org/scripts/5719-instasynchp-settings/code/InstaSynchP%20Settings.js
 // @require     https://greasyfork.org/scripts/6332-instasynchp-commands/code/InstaSynchP%20Commands.js
+// @require     https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/InstaSynchP%20Plugin%20Manager.js
 
 // @require     https://greasyfork.org/scripts/2857-jquery-bind-first/code/jquerybind-first.js
 // @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/InstaSynchP%20Event%20Hooks.js
@@ -144,6 +145,7 @@ Core.prototype.main = function () {
     var th = this;
     th.executeOnceCore();
     plugins.commands.executeOnceCore();
+    plugins.pluginManager.executeOnceCore();
     events.on(window.plugins.cssLoader, 'ExecuteOnce', window.plugins.cssLoader.executeOnceCore);
     events.on(window.plugins.settings, 'ExecuteOnce', window.plugins.settings.executeOnceCore);
     events.on(th, 'PreConnect,Disconnect', function () {
@@ -153,15 +155,18 @@ Core.prototype.main = function () {
     for (var pluginName in window.plugins) {
         if (window.plugins.hasOwnProperty(pluginName)) {
             var plugin = window.plugins[pluginName];
+            if(!plugin.enabled){
+                continue;
+            }
             events.on(plugin, 'PreConnect', plugin.preConnect);
             events.on(plugin, 'PostConnect', plugin.postConnect);
             events.on(plugin, 'ExecuteOnce', plugin.executeOnce);
             events.on(plugin, 'ResetVariables', plugin.resetVariables);
             commands.bind(plugin.commands);
-
             if (Object.prototype.toString.call(plugin.settings) === '[object Array]') {
                 window.plugins.settings.fields = window.plugins.settings.fields.concat(plugin.settings);
             }
+
         }
     }
 
@@ -195,7 +200,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.1.2');
+window.plugins.core = new Core('1.1.3');
 window.addEventListener('load', function () {
     window.plugins.core.main();
 }, false);
