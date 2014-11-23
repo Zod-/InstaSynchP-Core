@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.1.7
+// @version     1.1.8
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -25,7 +25,7 @@
 // @require     https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/InstaSynchP%20Plugin%20Manager.js?version=25754
 
 // @require     https://greasyfork.org/scripts/2857-jquery-bind-first/code/jquerybind-first.js
-// @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/InstaSynchP%20Event%20Hooks.js?version=25755
+// @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/InstaSynchP%20Event%20Hooks.js?version=25788
 
 // @require     https://greasyfork.org/scripts/2858-jquery-fullscreen/code/jqueryfullscreen.js
 // ==/UserScript==
@@ -197,7 +197,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.1.7');
+window.plugins.core = new Core('1.1.8');
 window.addEventListener('load', function () {
     window.plugins.core.main();
 }, false);
