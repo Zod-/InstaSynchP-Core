@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.1.6
+// @version     1.1.7
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -22,10 +22,10 @@
 // @require     https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/InstaSynchP%20CSSLoader.js?version=22825
 // @require     https://greasyfork.org/scripts/5719-instasynchp-settings/code/InstaSynchP%20Settings.js?version=22826
 // @require     https://greasyfork.org/scripts/6332-instasynchp-commands/code/InstaSynchP%20Commands.js?version=25596
-// @require     https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/InstaSynchP%20Plugin%20Manager.js?version=25713
+// @require     https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/InstaSynchP%20Plugin%20Manager.js?version=25754
 
 // @require     https://greasyfork.org/scripts/2857-jquery-bind-first/code/jquerybind-first.js
-// @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/InstaSynchP%20Event%20Hooks.js?version=22822
+// @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/InstaSynchP%20Event%20Hooks.js?version=25755
 
 // @require     https://greasyfork.org/scripts/2858-jquery-fullscreen/code/jqueryfullscreen.js
 // ==/UserScript==
@@ -138,6 +138,7 @@ Core.prototype.executeOnceCore = function () {
 Core.prototype.resetVariables = function () {
     "use strict";
     this.connected = false;
+    window.userInfo = undefined;
 };
 
 Core.prototype.main = function () {
@@ -171,12 +172,8 @@ Core.prototype.main = function () {
     }
 
     function load() {
-            //reset variables
-            events.fire('ResetVariables');
             //we are not connected yet
             events.fire('PreConnect');
-            //these need to be executed last
-
             //if the script was loading slow and we are already connected
             if (window.userInfo) {
                 th.connected = true;
@@ -185,7 +182,7 @@ Core.prototype.main = function () {
         }
         //these need to be executed last
     events.on(window.plugins.eventHooks, 'ExecuteOnce', window.plugins.eventHooks.executeOnceCore);
-    events.once(th, 'Userlist', function () {
+    events.on(th, 'LoadUserlist', function () {
         th.connected = true;
         events.fire('PostConnect');
     });
@@ -200,7 +197,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.1.6');
+window.plugins.core = new Core('1.1.7');
 window.addEventListener('load', function () {
     window.plugins.core.main();
 }, false);
