@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Base to load all the Plugins, also includes some mandatory plugins
 
-// @version     1.1.9
+// @version     1.2
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -19,14 +19,15 @@
 // @require     https://greasyfork.org/scripts/2859-video-url-parser/code/Video%20Url%20Parser.js
 
 // @require     https://greasyfork.org/scripts/5647-instasynchp-library/code/InstaSynchP%20Library.js?version=22833
-// @require     https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/InstaSynchP%20CSSLoader.js?version=22825
+// @require     https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/InstaSynchP%20CSSLoader.js?version=26081
 // @require     https://greasyfork.org/scripts/5719-instasynchp-settings/code/InstaSynchP%20Settings.js?version=22826
 // @require     https://greasyfork.org/scripts/6332-instasynchp-commands/code/InstaSynchP%20Commands.js?version=25596
-// @require     https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/InstaSynchP%20Plugin%20Manager.js?version=25754
+// @require     https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/InstaSynchP%20Plugin%20Manager.js?version=26089
 
-// @require     https://greasyfork.org/scripts/2857-jquery-bind-first/code/jquerybind-first.js?version=25891
-// @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/InstaSynchP%20Event%20Hooks.js?version=25788
+// @require     https://greasyfork.org/scripts/2857-jquery-bind-first/code/jquerybind-first.js?version=26080
+// @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/InstaSynchP%20Event%20Hooks.js?version=26090
 // ==/UserScript==
+
 function Core(version) {
     "use strict";
     this.version = version;
@@ -154,7 +155,7 @@ Core.prototype.main = function () {
     for (var pluginName in window.plugins) {
         if (window.plugins.hasOwnProperty(pluginName)) {
             var plugin = window.plugins[pluginName];
-            if(!plugin.enabled){
+            if (!plugin.enabled) {
                 continue;
             }
             events.on(plugin, 'PreConnect', plugin.preConnect);
@@ -195,7 +196,11 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.1.9');
-window.addEventListener('load', function () {
+window.plugins.core = new Core('1.2');
+if (window.document.readyState === 'complete') {
     window.plugins.core.main();
-}, false);
+} else {
+    window.addEventListener('load', function () {
+        window.plugins.core.main();
+    }, false);
+}
