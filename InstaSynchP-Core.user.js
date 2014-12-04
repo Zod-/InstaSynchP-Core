@@ -52,7 +52,7 @@ Core.prototype.executeOnceCore = function () {
                     i;
                 for (i = 0; i < arr.length; i += 1) {
                     eventName = arr[i].trim();
-                    if (th.listeners[eventName] === undefined) {
+                    if (typeof th.listeners[eventName] === 'undefined') {
                         th.listeners[eventName] = {
                             'preOld': [],
                             'postOld': []
@@ -104,7 +104,7 @@ Core.prototype.executeOnceCore = function () {
             'fire': function (eventName, parameters, preOld) {
                 var i,
                     listenersCopy;
-                if (th.listeners[eventName] === undefined) {
+                if (typeof th.listeners[eventName] === 'undefined') {
                     return;
                 }
                 //make a copy of the listener list since some handlers
