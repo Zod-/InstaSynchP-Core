@@ -80,25 +80,24 @@ Core.prototype.executeOnceCore = function () {
             //unbind event handlers
             'unbind': function (eventNames, callback) {
                 var arr = eventNames.split(','),
-                    eventName,
-                    i, j;
-                for (i = 0; i < arr.length; i += 1) {
-                    eventName = arr[i].trim();
-                    //search all occurences of callback and remove it
-                    if (th.listeners[eventName] !== undefined) {
-                        for (j = 0; j < th.listeners[eventName].preOld.length; j += 1) {
-                            if (th.listeners[eventName].preOld[j].callback === callback) {
-                                th.listeners[eventName].preOld.splice(j, 1);
-                                j -= 1;
-                            }
-                        }
-                        for (j = 0; j < th.listeners[eventName].postOld.length; j += 1) {
-                            if (th.listeners[eventName].postOld[j].callback === callback) {
-                                th.listeners[eventName].postOld.splice(j, 1);
-                                j -= 1;
-                            }
+                    i, temp;
+
+                //search all occurences of callback and remove it
+                function removeCallback(eventName, old) {
+                    if (typeof th.listeners[eventName] === 'undefined') {
+                        return;
+                    }
+                    for (var j = 0; j < th.listeners[eventName][old].length; j += 1) {
+                        if (th.listeners[eventName][old][j].callback === callback) {
+                            th.listeners[eventName][old].splice(j, 1);
+                            j -= 1;
                         }
                     }
+                }
+                for (i = 0; i < arr.length; i += 1) {
+                    temp = arr[i].trim();
+                    removeCallback(temp, 'preOld');
+                    removeCallback(temp, 'postOld');
                 }
             },
             //fire the event with the given parameters
@@ -144,8 +143,8 @@ Core.prototype.main = function () {
     "use strict";
     var th = this;
     th.executeOnceCore();
-    plugins.commands.executeOnceCore();
-    plugins.pluginManager.executeOnceCore();
+    window.plugins.commands.executeOnceCore();
+    window.plugins.pluginManager.executeOnceCore();
     events.on(window.plugins.cssLoader, 'ExecuteOnce', window.plugins.cssLoader.executeOnceCore);
     events.on(window.plugins.settings, 'ExecuteOnce', window.plugins.settings.executeOnceCore);
     events.on(th, 'PreConnect,Disconnect', function () {
@@ -153,21 +152,22 @@ Core.prototype.main = function () {
     });
     //prepare plugins
     for (var pluginName in window.plugins) {
-        if (window.plugins.hasOwnProperty(pluginName)) {
-            var plugin = window.plugins[pluginName];
-            if (!plugin.enabled) {
-                continue;
-            }
-            events.on(plugin, 'PreConnect', plugin.preConnect);
-            events.on(plugin, 'PostConnect', plugin.postConnect);
-            events.on(plugin, 'ExecuteOnce', plugin.executeOnce);
-            events.on(plugin, 'ResetVariables', plugin.resetVariables);
-            commands.bind(plugin.commands);
-            if (Object.prototype.toString.call(plugin.settings) === '[object Array]') {
-                window.plugins.settings.fields = window.plugins.settings.fields.concat(plugin.settings);
-            }
-
+        if (!window.plugins.hasOwnProperty(pluginName)) {
+            continue;
         }
+        var plugin = window.plugins[pluginName];
+        if (!plugin.enabled) {
+            continue;
+        }
+        events.on(plugin, 'PreConnect', plugin.preConnect);
+        events.on(plugin, 'PostConnect', plugin.postConnect);
+        events.on(plugin, 'ExecuteOnce', plugin.executeOnce);
+        events.on(plugin, 'ResetVariables', plugin.resetVariables);
+        commands.bind(plugin.commands);
+        if (Object.prototype.toString.call(plugin.settings) === '[object Array]') {
+            window.plugins.settings.fields = window.plugins.settings.fields.concat(plugin.settings);
+        }
+
     }
 
     function load() {
