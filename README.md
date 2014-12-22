@@ -1,7 +1,8 @@
 InstaSynchP-Core
 ================
 
-Base to load all the Plugins, also includes some mandatory plugins
+The core for a modular plugin system for InstaSynch. 
+Simply install other plugins through the plugin manager (Plugins button) at the top of the page or from [greasyfork](https://greasyfork.org/en/scripts?set=707).
 
 Includes
 --------
