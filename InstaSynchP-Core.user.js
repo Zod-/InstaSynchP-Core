@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        InstaSynchP Core
 // @namespace   InstaSynchP
-// @description Base to load all the Plugins, also includes some mandatory plugins
+// @description The core for a modular plugin system for InstaSynch
 
 // @version     1.2.1
 // @author      Zod-
