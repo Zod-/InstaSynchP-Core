@@ -1,7 +1,7 @@
 InstaSynchP-Core
 ================
 
-The core for a modular plugin system for InstaSynch. 
+The core for a modular plugin system for InstaSynch.
 Simply install other plugins through the plugin manager (Plugins button) at the top of the page or from [greasyfork](https://greasyfork.org/en/scripts?set=707).
 
 Includes
@@ -12,6 +12,7 @@ Includes
 * [InstaSynchP Event Hooks](https://greasyfork.org/en/scripts/5651-instasynchp-event-hooks)
 * [InstaSynchP Commands](https://greasyfork.org/en/scripts/6332-instasynchp-commands)
 * [InstaSynchP Plugin Manager](https://greasyfork.org/en/scripts/6573-instasynchp-plugin-manager)
+* [InstaSynchP Logger](https://greasyfork.org/scripts/8177-instasynchp-logger)
 
 Framework
 ---------
