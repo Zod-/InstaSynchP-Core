@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description The core for a modular plugin system for InstaSynch
 
-// @version     1.2.6
+// @version     1.3
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -239,7 +239,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.2.6');
+window.plugins.core = new Core('1.3');
 if (window.document.readyState === 'complete') {
   window.plugins.core.main();
 } else {
