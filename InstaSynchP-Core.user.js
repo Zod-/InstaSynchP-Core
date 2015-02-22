@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description The core for a modular plugin system for InstaSynch
 
-// @version     1.3.1
+// @version     1.3.2
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -80,6 +80,9 @@ Core.prototype.executeOnceCore = function () {
       },
       //unbind event handlers
       'unbind': function (eventNames, callback) {
+        if (isUdef(callback)) {
+          return;
+        }
         logger().debug(th.name, "Unbind", eventNames, callback.name);
         var arr = eventNames.split(','),
           i, temp;
@@ -239,7 +242,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.3.1');
+window.plugins.core = new Core('1.3.2');
 if (window.document.readyState === 'complete') {
   window.plugins.core.main();
 } else {
