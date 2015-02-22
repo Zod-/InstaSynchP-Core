@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description The core for a modular plugin system for InstaSynch
 
-// @version     1.3.4
+// @version     1.3.5
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -19,7 +19,7 @@
 // @require     https://greasyfork.org/scripts/8159-log4javascript/code/log4javascript.js?version=37575
 
 // @require     https://greasyfork.org/scripts/5647-instasynchp-library/code/code.js?version=37716
-// @require     https://greasyfork.org/scripts/8177-instasynchp-logger/code/code.js?version=37870
+// @require     https://greasyfork.org/scripts/8177-instasynchp-logger/code/code.js?version=37872
 // @require     https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/code.js?version=37765
 // @require     https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/code.js?version=37736
 // @require     https://greasyfork.org/scripts/5719-instasynchp-settings/code/code.js?version=37737
@@ -242,7 +242,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.3.4');
+window.plugins.core = new Core('1.3.5');
 if (window.document.readyState === 'complete') {
   window.plugins.core.main();
 } else {
