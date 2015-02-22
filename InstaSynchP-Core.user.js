@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description The core for a modular plugin system for InstaSynch
 
-// @version     1.3.5
+// @version     1.3.6
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -109,9 +109,6 @@ Core.prototype.executeOnceCore = function () {
       'fire': function (eventName, parameters, preOld) {
         var i,
           listenersCopy;
-        if (typeof th.listeners[eventName] === 'undefined') {
-          return;
-        }
 
         if (eventName !== 'PageMessage' && !eventName.startsWith('Input')) {
           try {
@@ -119,6 +116,10 @@ Core.prototype.executeOnceCore = function () {
           } catch (ignore) {
             logger().debug(th.name, "Fire", eventName, "preOld", preOld, parameters);
           }
+        }
+
+        if (typeof th.listeners[eventName] === 'undefined') {
+          return;
         }
 
         //make a copy of the listener list since some handlers
@@ -242,7 +243,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.3.5');
+window.plugins.core = new Core('1.3.6');
 if (window.document.readyState === 'complete') {
   window.plugins.core.main();
 } else {
