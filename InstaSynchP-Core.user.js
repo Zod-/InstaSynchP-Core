@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description The core for a modular plugin system for InstaSynch
 
-// @version     1.3.7
+// @version     1.3.8
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -24,7 +24,7 @@
 // @require     https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/code.js?version=37736
 // @require     https://greasyfork.org/scripts/5719-instasynchp-settings/code/code.js?version=37737
 // @require     https://greasyfork.org/scripts/6332-instasynchp-commands/code/code.js?version=37738
-// @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/code.js?version=37971
+// @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/code.js?version=38337
 // ==/UserScript==
 
 function Core(version) {
@@ -216,7 +216,7 @@ Core.prototype.main = function () {
     events.on(plugin, 'ExecuteOnce', plugin.executeOnce);
     events.on(plugin, 'ResetVariables', plugin.resetVariables);
     commands.bind(plugin.commands);
-    if (Object.prototype.toString.call(plugin.settings) === '[object Array]') {
+    if (Array.isArray(plugin.settings)) {
       plugins.settings.fields = plugins.settings.fields.concat(plugin.settings);
     }
   }
@@ -243,7 +243,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.3.7');
+window.plugins.core = new Core('1.3.8');
 if (window.document.readyState === 'complete') {
   window.plugins.core.main();
 } else {
