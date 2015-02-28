@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description The core for a modular plugin system for InstaSynch
 
-// @version     1.3.8
+// @version     1.3.9
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -194,6 +194,8 @@ Core.prototype.main = function () {
   th.executeOnceCore();
   plugins.logger.executeOnceCore();
   plugins.commands.executeOnceCore();
+  //don't want to have ask if its firefox or chrome everytime
+  logger().info(th.name, navigator.userAgent);
   plugins.pluginManager.executeOnceCore();
   events.on(plugins.cssLoader, 'ExecuteOnce', plugins.cssLoader.executeOnceCore);
   events.on(plugins.settings, 'ExecuteOnce', plugins.settings.executeOnceCore);
@@ -243,7 +245,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.3.8');
+window.plugins.core = new Core('1.3.9');
 if (window.document.readyState === 'complete') {
   window.plugins.core.main();
 } else {
