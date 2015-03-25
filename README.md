@@ -84,6 +84,7 @@ See  [InstaSynchP Settings](https://greasyfork.org/en/scripts/5719-instasynchp-s
 
 CSSLoader
 -----------
+The core will look for styles in `plugin.styles`<br>
 See  [InstaSynchP CSSLoader](https://greasyfork.org/en/scripts/5718-instasynchp-cssloader)
 
 License
