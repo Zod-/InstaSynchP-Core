@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description The core for a modular plugin system for InstaSynch
 
-// @version     1.4.1
+// @version     1.4.2
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Core
 // @license     MIT
@@ -21,7 +21,7 @@
 // @require     https://greasyfork.org/scripts/5647-instasynchp-library/code/code.js?version=37716
 // @require     https://greasyfork.org/scripts/8177-instasynchp-logger/code/code.js?version=37872
 // @require     https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/code.js?version=42665
-// @require     https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/code.js?version=37736
+// @require     https://greasyfork.org/scripts/6573-instasynchp-cssloader/code/code.js?version=43457
 // @require     https://greasyfork.org/scripts/5719-instasynchp-settings/code/code.js?version=42666
 // @require     https://greasyfork.org/scripts/6332-instasynchp-commands/code/code.js?version=37738
 // @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/code.js?version=38337
@@ -45,7 +45,8 @@ Core.prototype.executeOnceCore = function () {
         if (typeof callback === 'undefined') {
           return;
         }
-        logger().debug(th.name, "On", eventNames, !isUdef(callback) ? callback.name : undefined,
+        logger().debug(th.name, "On", eventNames, !isUdef(callback) ?
+          callback.name : undefined,
           "preOld", preOld, !isUdef(ref) ? ref.name : undefined);
 
         var arr = eventNames.split(','),
@@ -92,7 +93,8 @@ Core.prototype.executeOnceCore = function () {
           if (typeof th.listeners[eventName] === 'undefined') {
             return;
           }
-          for (var j = 0; j < th.listeners[eventName][old].length; j += 1) {
+          for (var j = 0; j < th.listeners[eventName][old].length; j +=
+            1) {
             if (th.listeners[eventName][old][j].callback === callback) {
               th.listeners[eventName][old].splice(j, 1);
               j -= 1;
@@ -110,11 +112,14 @@ Core.prototype.executeOnceCore = function () {
         var i,
           listenersCopy;
 
-        if (eventName !== 'PageMessage' && !eventName.startsWith('Input')) {
+        if (eventName !== 'PageMessage' && !eventName.startsWith(
+            'Input')) {
           try {
-            logger().debug(th.name, "Fire", eventName, "preOld", preOld, JSON.stringify(parameters));
+            logger().debug(th.name, "Fire", eventName, "preOld", preOld,
+              JSON.stringify(parameters));
           } catch (ignore) {
-            logger().debug(th.name, "Fire", eventName, "preOld", preOld, parameters);
+            logger().debug(th.name, "Fire", eventName, "preOld", preOld,
+              parameters);
           }
         }
 
@@ -133,11 +138,13 @@ Core.prototype.executeOnceCore = function () {
         //fire the events and catch possible errors
         for (i = 0; i < listenersCopy.length; i += 1) {
           try {
-            listenersCopy[i].callback.apply(listenersCopy[i].ref, parameters);
+            listenersCopy[i].callback.apply(listenersCopy[i].ref,
+              parameters);
           } catch (err) {
             logger().error(th.name, eventName, err.message,
               listenersCopy[i].callback.name,
-              listenersCopy[i].ref ? listenersCopy[i].ref.name : undefined,
+              listenersCopy[i].ref ? listenersCopy[i].ref.name :
+              undefined,
               err.stack
             );
           }
@@ -151,17 +158,21 @@ Core.prototype.executeOnceCore = function () {
   clone.attr('id', 'plugin_dropdown');
   $('a', clone).attr('href', '#').attr('onClick', '');
   $('.fa-user', clone).toggleClass('fa-user').toggleClass('fa-plug').before(
-    $('#tabs_chat > a > span').clone().css('margin-right', '2px').toggleClass('updates')
+    $('#tabs_chat > a > span').clone().css('margin-right', '2px').toggleClass(
+      'updates')
     .css('animation', 'unread-msg-count 3s infinite')
     .css('-webkit-animation', 'unread-msg-count 3s infinite')
     .css('-moz-animation', 'unread-msg-count 3s infinite')
     .css('border-radius', '4px')
   );
   $('#my_room_link', clone).parent().remove();
-  $('#logged_in_as', clone).attr('id', 'plugins_settings_title').text('Plugins');
-  $('.dropdown-menu > li:first-child > a', clone).attr('id', 'plugin_settings');
+  $('#logged_in_as', clone).attr('id', 'plugins_settings_title').text(
+    'Plugins');
+  $('.dropdown-menu > li:first-child > a', clone).attr('id',
+    'plugin_settings');
   $('#logout', clone).attr('id', 'plugin_manager').text('').append(
-    $('#tabs_chat > a > span').clone().css('margin-right', '3px').toggleClass('updates')
+    $('#tabs_chat > a > span').clone().css('margin-right', '3px').toggleClass(
+      'updates')
     .css('animation', 'unread-msg-count 3s infinite')
     .css('-webkit-animation', 'unread-msg-count 3s infinite')
     .css('-moz-animation', 'unread-msg-count 3s infinite')
@@ -197,15 +208,28 @@ Core.prototype.main = function () {
   //don't want to have ask if its firefox or chrome everytime
   logger().info(th.name, navigator.userAgent);
   plugins.pluginManager.executeOnceCore();
-  events.on(plugins.cssLoader, 'ExecuteOnce', plugins.cssLoader.executeOnceCore);
   events.on(plugins.settings, 'ExecuteOnce', plugins.settings.executeOnceCore);
   events.on(th, 'PreConnect,Disconnect', function () {
     events.fire('ResetVariables');
   });
 
   function loadStyle(style) {
+    plugins.settings.fields.push({
+      'label': '',
+      'id': style.name + '-css-content',
+      'type': 'hidden',
+      'value': '',
+      'section': ['Core']
+    });
+    plugins.settings.fields.push({
+      'label': '',
+      'id': style.name + '-css-url',
+      'type': 'hidden',
+      'value': '',
+      'section': ['Core']
+    });
     events.on(plugins.cssLoader, 'ExecuteOnce', function () {
-      window.cssLoader.add(style);
+      plugins.cssLoader.addStyle(style);
     });
   }
 
@@ -248,6 +272,7 @@ Core.prototype.main = function () {
     th.connected = true;
     events.fire('PostConnect');
   });
+
   //execute one time only scripts
   events.fire('ExecuteOnce');
 
@@ -255,7 +280,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.core = new Core('1.4.1');
+window.plugins.core = new Core('1.4.2');
 if (window.document.readyState === 'complete') {
   window.plugins.core.main();
 } else {
