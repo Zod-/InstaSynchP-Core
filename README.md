@@ -1,4 +1,4 @@
-InstaSynchP-Core
+InstaSynchP-Core [![Build Status](https://travis-ci.org/Zod-/InstaSynchP-Core.svg)](https://travis-ci.org/Zod-/InstaSynchP-Core)
 ================
 
 The core for a modular plugin system for InstaSynch.
