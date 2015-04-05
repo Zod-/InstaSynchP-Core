@@ -1,2 +1,29 @@
 {
+  "globals": {
+    "commands":  true,
+    "logger":  true,
+    "events":  true,
+    "isUdef":  true
+  },
+  "qunit":       true,
+  "jquery":      true,
+  "browser":     true,
+  "boss":        true,
+  "node":        true,
+  "onecase":     true,
+  "lastsemic":   true,
+  "camelcase":   true,
+  "eqeqeq":      true,
+  "latedef":     true,
+  "strict":      true,
+  "undef":       true,
+  "unused":      true,
+  "eqnull":      true,
+  "multistr":    true,
+  "curly":       true,
+  "forin":       true,
+  "maxlen":        80,
+  "indent":         2,
+  "newcap":     false,
+  "quotmark": "single"
 }

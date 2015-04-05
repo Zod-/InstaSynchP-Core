@@ -16,9 +16,9 @@ Core.prototype.executeOnceCore = function () {
         if (typeof callback === 'undefined') {
           return;
         }
-        logger().debug(_this.name, "On", eventNames, !isUdef(callback) ?
+        logger().debug(_this.name, 'On', eventNames, !isUdef(callback) ?
           callback.name : undefined,
-          "preOld", preOld, !isUdef(ref) ? ref.name : undefined);
+          'preOld', preOld, !isUdef(ref) ? ref.name : undefined);
 
         eventNames.split(',').forEach(function (eventName) {
           eventName = eventName.trim();
@@ -52,7 +52,7 @@ Core.prototype.executeOnceCore = function () {
         if (isUdef(callback)) {
           return;
         }
-        logger().debug(_this.name, "Unbind", eventNames, callback.name);
+        logger().debug(_this.name, 'Unbind', eventNames, callback.name);
 
         //search all occurences of callback and remove it
         function removeCallback(eventName, old) {
@@ -81,11 +81,11 @@ Core.prototype.executeOnceCore = function () {
         if (eventName !== 'PageMessage' && !eventName.startsWith(
             'Input')) {
           try {
-            logger().debug(_this.name, "Fire", eventName, "preOld",
+            logger().debug(_this.name, 'Fire', eventName, 'preOld',
               preOld,
               JSON.stringify(parameters));
           } catch (ignore) {
-            logger().debug(_this.name, "Fire", eventName, "preOld",
+            logger().debug(_this.name, 'Fire', eventName, 'preOld',
               preOld,
               parameters);
           }
@@ -211,11 +211,11 @@ Core.prototype.main = function () {
     }
     var plugin = plugins[pluginName];
     if (!plugin.enabled) {
-      logger().info(_this.name, "Skipping disabled plugin", plugin.name,
+      logger().info(_this.name, 'Skipping disabled plugin', plugin.name,
         plugin.version);
       continue;
     }
-    logger().info(_this.name, "Found plugin", plugin.name, plugin.version);
+    logger().info(_this.name, 'Found plugin', plugin.name, plugin.version);
     events.on(plugin, 'PreConnect', plugin.preConnect);
     events.on(plugin, 'PostConnect', plugin.postConnect);
     events.on(plugin, 'ExecuteOnce', plugin.executeOnce);
@@ -239,7 +239,8 @@ Core.prototype.main = function () {
       }
     }
     //these need to be executed last
-  events.on(plugins.eventHooks, 'ExecuteOnce', plugins.eventHooks.executeOnceCore);
+  events.on(plugins.eventHooks, 'ExecuteOnce',
+    plugins.eventHooks.executeOnceCore);
   events.on(_this, 'LoadUserlist', function () {
     _this.connected = true;
     events.fire('PostConnect');
@@ -258,6 +259,7 @@ if (window.document.readyState === 'complete') {
   window.plugins.core.main();
 } else {
   window.addEventListener('load', function () {
+    'use strict';
     window.plugins.core.main();
   }, false);
 }
