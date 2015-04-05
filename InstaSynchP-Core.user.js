@@ -28,7 +28,7 @@
 // ==/UserScript==
 
 function Core(version) {
-  "use strict";
+  'use strict';
   this.version = version;
   this.name = 'InstaSynchP Core';
   this.listeners = {};
@@ -36,8 +36,8 @@ function Core(version) {
 }
 
 Core.prototype.executeOnceCore = function () {
-  "use strict";
-  var th = this;
+  'use strict';
+  var _this = this;
   window.events = (function () {
     return {
       //bind event handlers
@@ -45,34 +45,31 @@ Core.prototype.executeOnceCore = function () {
         if (typeof callback === 'undefined') {
           return;
         }
-        logger().debug(th.name, "On", eventNames, !isUdef(callback) ?
+        logger().debug(_this.name, "On", eventNames, !isUdef(callback) ?
           callback.name : undefined,
           "preOld", preOld, !isUdef(ref) ? ref.name : undefined);
 
-        var arr = eventNames.split(','),
-          eventName,
-          i;
-        for (i = 0; i < arr.length; i += 1) {
-          eventName = arr[i].trim();
-          if (typeof th.listeners[eventName] === 'undefined') {
-            th.listeners[eventName] = {
+        eventNames.split(',').forEach(function (eventName) {
+          eventName = eventName.trim();
+          if (typeof _this.listeners[eventName] === 'undefined') {
+            _this.listeners[eventName] = {
               'preOld': [],
               'postOld': []
             };
           }
           //execute it before are after the overwritten function
           if (preOld) {
-            th.listeners[eventName].preOld.push({
+            _this.listeners[eventName].preOld.push({
               ref: ref,
               callback: callback
             });
           } else {
-            th.listeners[eventName].postOld.push({
+            _this.listeners[eventName].postOld.push({
               ref: ref,
               callback: callback
             });
           }
-        }
+        });
       },
       //bind event handler and remove any previous once
       'once': function (ref, eventNames, callback, preOld) {
@@ -84,46 +81,46 @@ Core.prototype.executeOnceCore = function () {
         if (isUdef(callback)) {
           return;
         }
-        logger().debug(th.name, "Unbind", eventNames, callback.name);
-        var arr = eventNames.split(','),
-          i, temp;
+        logger().debug(_this.name, "Unbind", eventNames, callback.name);
 
         //search all occurences of callback and remove it
         function removeCallback(eventName, old) {
-          if (typeof th.listeners[eventName] === 'undefined') {
+          if (typeof _this.listeners[eventName] === 'undefined') {
             return;
           }
-          for (var j = 0; j < th.listeners[eventName][old].length; j +=
+          for (var j = 0; j < _this.listeners[eventName][old].length; j +=
             1) {
-            if (th.listeners[eventName][old][j].callback === callback) {
-              th.listeners[eventName][old].splice(j, 1);
+            if (_this.listeners[eventName][old][j].callback ===
+              callback) {
+              _this.listeners[eventName][old].splice(j, 1);
               j -= 1;
             }
           }
         }
-        for (i = 0; i < arr.length; i += 1) {
-          temp = arr[i].trim();
-          removeCallback(temp, 'preOld');
-          removeCallback(temp, 'postOld');
-        }
+        eventNames.split(',').forEach(function (eventName) {
+          eventName = eventName.trim();
+          removeCallback(eventName, 'preOld');
+          removeCallback(eventName, 'postOld');
+        });
       },
       //fire the event with the given parameters
       'fire': function (eventName, parameters, preOld) {
-        var i,
-          listenersCopy;
+        var listenersCopy;
 
         if (eventName !== 'PageMessage' && !eventName.startsWith(
             'Input')) {
           try {
-            logger().debug(th.name, "Fire", eventName, "preOld", preOld,
+            logger().debug(_this.name, "Fire", eventName, "preOld",
+              preOld,
               JSON.stringify(parameters));
           } catch (ignore) {
-            logger().debug(th.name, "Fire", eventName, "preOld", preOld,
+            logger().debug(_this.name, "Fire", eventName, "preOld",
+              preOld,
               parameters);
           }
         }
 
-        if (typeof th.listeners[eventName] === 'undefined') {
+        if (typeof _this.listeners[eventName] === 'undefined') {
           return;
         }
 
@@ -131,17 +128,17 @@ Core.prototype.executeOnceCore = function () {
         //could remove listeners changing the length of the array
         //while iterating over it
         if (preOld) {
-          listenersCopy = [].concat(th.listeners[eventName].preOld);
+          listenersCopy = [].concat(_this.listeners[eventName].preOld);
         } else {
-          listenersCopy = [].concat(th.listeners[eventName].postOld);
+          listenersCopy = [].concat(_this.listeners[eventName].postOld);
         }
         //fire the events and catch possible errors
-        for (i = 0; i < listenersCopy.length; i += 1) {
+        for (var i = 0; i < listenersCopy.length; i += 1) {
           try {
             listenersCopy[i].callback.apply(listenersCopy[i].ref,
               parameters);
           } catch (err) {
-            logger().error(th.name, eventName, err.message,
+            logger().error(_this.name, eventName, err.message,
               listenersCopy[i].callback.name,
               listenersCopy[i].ref ? listenersCopy[i].ref.name :
               undefined,
@@ -187,29 +184,28 @@ Core.prototype.executeOnceCore = function () {
 };
 
 Core.prototype.postConnect = function () {
-  "use strict";
-  var th = this;
+  'use strict';
   $('#plugin_dropdown').css('display', 'initial');
 };
 
 Core.prototype.resetVariables = function () {
-  "use strict";
+  'use strict';
   this.connected = false;
   window.userInfo = undefined;
 };
 
 Core.prototype.main = function () {
-  "use strict";
-  var th = this,
-    plugins = window.plugins;
-  th.executeOnceCore();
+  'use strict';
+  var _this = this;
+  var plugins = window.plugins;
+  _this.executeOnceCore();
   plugins.logger.executeOnceCore();
   plugins.commands.executeOnceCore();
   //don't want to have ask if its firefox or chrome everytime
-  logger().info(th.name, navigator.userAgent);
+  logger().info(_this.name, navigator.userAgent);
   plugins.pluginManager.executeOnceCore();
   events.on(plugins.settings, 'ExecuteOnce', plugins.settings.executeOnceCore);
-  events.on(th, 'PreConnect,Disconnect', function () {
+  events.on(_this, 'PreConnect,Disconnect', function () {
     events.fire('ResetVariables');
   });
 
@@ -240,10 +236,11 @@ Core.prototype.main = function () {
     }
     var plugin = plugins[pluginName];
     if (!plugin.enabled) {
-      logger().info(th.name, "Skipping disabled plugin", plugin.name, plugin.version);
+      logger().info(_this.name, "Skipping disabled plugin", plugin.name,
+        plugin.version);
       continue;
     }
-    logger().info(th.name, "Found plugin", plugin.name, plugin.version);
+    logger().info(_this.name, "Found plugin", plugin.name, plugin.version);
     events.on(plugin, 'PreConnect', plugin.preConnect);
     events.on(plugin, 'PostConnect', plugin.postConnect);
     events.on(plugin, 'ExecuteOnce', plugin.executeOnce);
@@ -262,14 +259,14 @@ Core.prototype.main = function () {
       events.fire('PreConnect');
       //if the script was loading slow and we are already connected
       if (window.userInfo) {
-        th.connected = true;
+        _this.connected = true;
         events.fire('PostConnect');
       }
     }
     //these need to be executed last
   events.on(plugins.eventHooks, 'ExecuteOnce', plugins.eventHooks.executeOnceCore);
-  events.on(th, 'LoadUserlist', function () {
-    th.connected = true;
+  events.on(_this, 'LoadUserlist', function () {
+    _this.connected = true;
     events.fire('PostConnect');
   });
 
