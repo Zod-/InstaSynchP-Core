@@ -1,0 +1,84 @@
+{
+  "name": "InstaSynchP-Core",
+  "version": "1.4.3",
+  "description": "The core for a modular plugin system for InstaSync",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "grunt --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zod-/InstaSynchP-Core.git"
+  },
+  "keywords": [
+    "InstaSync",
+    "Core",
+    "Userscript"
+  ],
+  "author": {
+    "name": "Julian Hangstörfer",
+    "email": "jhangstoerfer@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Zod-/InstaSynchP-Core/issues"
+  },
+  "homepage": "https://github.com/Zod-/InstaSynchP-Core",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-jshint": "^0.11.1",
+    "grunt-string-replace": "^1.0.0",
+    "grunt-userscript-meta": "^0.1.2"
+  },
+  "userscript": {
+    "namespace": "InstaSynchP",
+    "author": {
+      "name": "Zod-"
+    },
+    "require": {
+      "greasyfork": [{
+        "id": "2859-video-url-parser",
+        "version": "30624"
+      }, {
+        "id": "2855-gm-config",
+        "version": "33973"
+      }, {
+        "id": "2857-jquery-bind-first",
+        "version": "26080"
+      }, {
+        "id": "8159-log4javascript",
+        "version": "37575"
+      }, {
+        "id": "5647-instasynchp-library",
+        "version": "37716"
+      }, {
+        "id": "8177-instasynchp-logger",
+        "version": "37872"
+      }, {
+        "id": "6573-instasynchp-plugin-manager",
+        "version": "42665"
+      }, {
+        "id": "5718-instasynchp-cssloader",
+        "version": "43457"
+      }, {
+        "id": "5719-instasynchp-settings",
+        "version": "42666"
+      }, {
+        "id": "6332-instasynchp-commands",
+        "version": "37738"
+      }, {
+        "id": "5651-instasynchp-event-hooks",
+        "version": "38337"
+      }]
+    },
+    "other": {
+      "include": [
+        "*://instasync.com/r/*",
+        "*://*.instasync.com/r/*"
+      ],
+      "grant": "none",
+      "run-at": "document-end"
+    }
+  }
+}
