@@ -1,35 +1,6 @@
-// ==UserScript==
-// @name        InstaSynchP Core
-// @namespace   InstaSynchP
-// @description The core for a modular plugin system for InstaSynch
-
-// @version     1.4.3
-// @author      Zod-
-// @source      https://github.com/Zod-/InstaSynchP-Core
-// @license     MIT
-
-// @include     *://instasync.com/r/*
-// @include     *://*.instasync.com/r/*
-// @grant       none
-// @run-at      document-end
-
-// @require     https://greasyfork.org/scripts/2859-video-url-parser/code/Video%20Url%20Parser.js?version=30624
-// @require     https://greasyfork.org/scripts/2855-gm-config/code/GM_config.js?version=33973
-// @require     https://greasyfork.org/scripts/2857-jquery-bind-first/code/jquerybind-first.js?version=26080
-// @require     https://greasyfork.org/scripts/8159-log4javascript/code/log4javascript.js?version=37575
-
-// @require     https://greasyfork.org/scripts/5647-instasynchp-library/code/code.js?version=37716
-// @require     https://greasyfork.org/scripts/8177-instasynchp-logger/code/code.js?version=37872
-// @require     https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/code.js?version=42665
-// @require     https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/code.js?version=43457
-// @require     https://greasyfork.org/scripts/5719-instasynchp-settings/code/code.js?version=42666
-// @require     https://greasyfork.org/scripts/6332-instasynchp-commands/code/code.js?version=37738
-// @require     https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/code.js?version=38337
-// ==/UserScript==
-
-function Core(version) {
+function Core() {
   'use strict';
-  this.version = version;
+  this.version = '@VERSION@';
   this.name = 'InstaSynchP Core';
   this.listeners = {};
   this.connected = false;
@@ -282,7 +253,7 @@ Core.prototype.main = function () {
 
 window.plugins = window.plugins || {};
 window.instaSynchP = window.instaSynchP || {};
-window.plugins.core = new Core('1.4.3');
+window.plugins.core = new Core();
 if (window.document.readyState === 'complete') {
   window.plugins.core.main();
 } else {
