@@ -196,8 +196,12 @@ Core.prototype.resetVariables = function () {
 
 Core.prototype.main = function () {
   'use strict';
+  if (window.instaSynchP.mainLoaded) {
+    return;
+  }
   var _this = this;
   var plugins = window.plugins;
+  window.instaSynchP.mainLoaded = true;
   _this.executeOnceCore();
   plugins.logger.executeOnceCore();
   plugins.commands.executeOnceCore();
@@ -277,6 +281,7 @@ Core.prototype.main = function () {
 };
 
 window.plugins = window.plugins || {};
+window.instaSynchP = window.instaSynchP || {};
 window.plugins.core = new Core('1.4.2.1');
 if (window.document.readyState === 'complete') {
   window.plugins.core.main();
