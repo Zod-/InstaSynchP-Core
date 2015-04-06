@@ -2,126 +2,12 @@ function Core() {
   'use strict';
   this.version = '@VERSION@';
   this.name = 'InstaSynchP Core';
-  this.listeners = {};
   this.connected = false;
+  this.Events = Events;
 }
 
-Core.prototype.executeOnceCore = function () {
+Core.prototype.createPluginsButton = function () {
   'use strict';
-  var _this = this;
-  window.events = (function () {
-    return {
-      //bind event handlers
-      'on': function (ref, eventNames, callback, preOld) {
-        if (typeof callback === 'undefined') {
-          return;
-        }
-        logger().debug(_this.name, 'On', eventNames, !isUdef(callback) ?
-          callback.name : undefined,
-          'preOld', preOld, !isUdef(ref) ? ref.name : undefined);
-
-        eventNames.split(',').forEach(function (eventName) {
-          eventName = eventName.trim();
-          if (typeof _this.listeners[eventName] === 'undefined') {
-            _this.listeners[eventName] = {
-              'preOld': [],
-              'postOld': []
-            };
-          }
-          //execute it before are after the overwritten function
-          if (preOld) {
-            _this.listeners[eventName].preOld.push({
-              ref: ref,
-              callback: callback
-            });
-          } else {
-            _this.listeners[eventName].postOld.push({
-              ref: ref,
-              callback: callback
-            });
-          }
-        });
-      },
-      //bind event handler and remove any previous once
-      'once': function (ref, eventNames, callback, preOld) {
-        this.unbind(eventNames, callback);
-        this.on(ref, eventNames, callback, preOld);
-      },
-      //unbind event handlers
-      'unbind': function (eventNames, callback) {
-        if (isUdef(callback)) {
-          return;
-        }
-        logger().debug(_this.name, 'Unbind', eventNames, callback.name);
-
-        //search all occurences of callback and remove it
-        function removeCallback(eventName, old) {
-          if (typeof _this.listeners[eventName] === 'undefined') {
-            return;
-          }
-          for (var j = 0; j < _this.listeners[eventName][old].length; j +=
-            1) {
-            if (_this.listeners[eventName][old][j].callback ===
-              callback) {
-              _this.listeners[eventName][old].splice(j, 1);
-              j -= 1;
-            }
-          }
-        }
-        eventNames.split(',').forEach(function (eventName) {
-          eventName = eventName.trim();
-          removeCallback(eventName, 'preOld');
-          removeCallback(eventName, 'postOld');
-        });
-      },
-      //fire the event with the given parameters
-      'fire': function (eventName, parameters, preOld) {
-        var listenersCopy;
-
-        if (eventName !== 'PageMessage' && !eventName.startsWith(
-            'Input')) {
-          try {
-            logger().debug(_this.name, 'Fire', eventName, 'preOld',
-              preOld,
-              JSON.stringify(parameters));
-          } catch (ignore) {
-            logger().debug(_this.name, 'Fire', eventName, 'preOld',
-              preOld,
-              parameters);
-          }
-        }
-
-        if (typeof _this.listeners[eventName] === 'undefined') {
-          return;
-        }
-
-        //make a copy of the listener list since some handlers
-        //could remove listeners changing the length of the array
-        //while iterating over it
-        if (preOld) {
-          listenersCopy = [].concat(_this.listeners[eventName].preOld);
-        } else {
-          listenersCopy = [].concat(_this.listeners[eventName].postOld);
-        }
-        //fire the events and catch possible errors
-        for (var i = 0; i < listenersCopy.length; i += 1) {
-          try {
-            listenersCopy[i].callback.apply(listenersCopy[i].ref,
-              parameters);
-          } catch (err) {
-            logger().error(_this.name, eventName, err.message,
-              listenersCopy[i].callback.name,
-              listenersCopy[i].ref ? listenersCopy[i].ref.name :
-              undefined,
-              err.stack
-            );
-          }
-        }
-      }
-    };
-  }());
-
-  //create Plugins button
   var clone = $('#user_dropdown').clone();
   clone.attr('id', 'plugin_dropdown');
   $('a', clone).attr('href', '#').attr('onClick', '');
@@ -152,6 +38,13 @@ Core.prototype.executeOnceCore = function () {
   ).append(' Manager');
   $('.fa-cog', clone).toggleClass('fa-cogs').toggleClass('fa-cog');
   $('#user_dropdown').before(clone);
+};
+
+Core.prototype.executeOnceCore = function () {
+  'use strict';
+  var _this = this;
+  window.events = new _this.Events();
+  _this.createPluginsButton();
 };
 
 Core.prototype.postConnect = function () {

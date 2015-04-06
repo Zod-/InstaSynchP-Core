@@ -3,6 +3,7 @@
     "commands":  true,
     "logger":  true,
     "events":  true,
+    "Events":  true,
     "isUdef":  true
   },
   "qunit":       true,

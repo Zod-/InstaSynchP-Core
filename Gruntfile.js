@@ -30,7 +30,7 @@ module.exports = function (grunt) {
     },
     concat: {
       dist: {
-        src: ['src/meta.js', 'src/core.js'],
+        src: ['src/meta.js','src/events.js', 'src/core.js'],
         dest: 'dist/InstaSynchP-Core.user.js'
       }
     },
