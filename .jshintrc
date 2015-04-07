@@ -1,10 +1,12 @@
 {
   "globals": {
     "commands":  true,
-    "logger":  true,
-    "events":  true,
-    "Events":  true,
-    "isUdef":  true
+    "logger":    true,
+    "events":    true,
+    "Events":    true,
+    "plugins":   true,
+    "isUdef":    true,
+    "thisUser":  true
   },
   "qunit":       true,
   "jquery":      true,
