@@ -27,7 +27,9 @@
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-jshint": "^0.11.1",
+    "grunt-shell": "^1.1.2",
     "grunt-string-replace": "^1.0.0",
     "grunt-userscript-meta": "^0.1.2"
   },

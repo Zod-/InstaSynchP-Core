@@ -1,0 +1,15 @@
+#plugin_dropdown > a > span.badge.unread-msg-count.updates {
+  margin-right: 2px;
+  animation: unread-msg-count 3s infinite;
+  -webkit-animation: unread-msg-count 3s infinite;
+  -moz-animation: unread-msg-count 3s infinite;
+  border-radius: 4px;
+}
+
+#plugin_manager > span {
+  margin-right: 3px;
+  animation: unread-msg-count 3s infinite;
+  -webkit-animation: unread-msg-count 3s infinite;
+  -moz-animation: unread-msg-count 3s infinite;
+  border-radius: 4px;
+}
