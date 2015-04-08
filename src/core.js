@@ -53,6 +53,9 @@ Core.prototype.resetVariables = function () {
 Core.prototype.prepareFramework = function () {
   'use strict';
   var _this = this;
+  _this.log({
+    event: 'Prepare Framework'
+  });
   _this.executeOnceCore();
   plugins.logger.executeOnceCore();
   plugins.commands.executeOnceCore();
@@ -66,6 +69,9 @@ Core.prototype.prepareFramework = function () {
 Core.prototype.finishUpFramework = function () {
   'use strict';
   var _this = this;
+  _this.log({
+    event: 'Finish up Framework'
+  });
   events.on(plugins.eventHooks, 'ExecuteOnce',
     plugins.eventHooks.executeOnceCore);
   events.on(_this, 'LoadUserlist', _this.onConnect);
@@ -90,6 +96,7 @@ Core.prototype.preparePlugin = function (plugin) {
   if (!plugin.enabled) {
     _this.log({
       event: 'Skipping disabled plugin',
+      type: 'info',
       plugin: plugin
     });
     return;
@@ -97,6 +104,7 @@ Core.prototype.preparePlugin = function (plugin) {
 
   _this.log({
     event: 'Found plugin',
+    type: 'info',
     plugin: plugin
   });
 
@@ -138,6 +146,9 @@ Core.prototype.preparePlugin = function (plugin) {
 Core.prototype.preparePlugins = function () {
   'use strict';
   var _this = this;
+  _this.log({
+    event: 'Prepare plugins'
+  });
   for (var pluginName in plugins) {
     if (plugins.hasOwnProperty(pluginName)) {
       _this.preparePlugin(plugins[pluginName]);
@@ -176,6 +187,9 @@ Core.prototype.executeOnce = function () {
 Core.prototype.start = function () {
   'use strict';
   var _this = this;
+  _this.log({
+    event: 'Start'
+  });
   _this.fireExecuteOnce();
   _this.fireConnect();
 };
@@ -183,7 +197,9 @@ Core.prototype.start = function () {
 Core.prototype.main = function () {
   'use strict';
   var _this = this;
-
+  _this.log({
+    event: 'Main'
+  });
   _this.prepareFramework();
   _this.preparePlugins();
   _this.finishUpFramework();
