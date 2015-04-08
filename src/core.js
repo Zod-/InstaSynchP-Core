@@ -14,9 +14,6 @@ function Core() {
 
 Core.prototype.createPluginsButton = function () {
   'use strict';
-  this.log({
-    event: 'Create plugins button'
-  });
   var clone = $('#user_dropdown').clone();
   clone.attr('id', 'plugin_dropdown');
   $('a', clone).attr('href', '#').attr('onClick', '');
@@ -56,11 +53,11 @@ Core.prototype.resetVariables = function () {
 Core.prototype.prepareFramework = function () {
   'use strict';
   var _this = this;
+  _this.executeOnceCore();
+  plugins.logger.executeOnceCore();
   _this.log({
     event: 'Prepare Framework'
   });
-  _this.executeOnceCore();
-  plugins.logger.executeOnceCore();
   plugins.commands.executeOnceCore();
   plugins.pluginManager.executeOnceCore();
   events.on(plugins.settings, 'ExecuteOnce', plugins.settings.executeOnceCore);
@@ -199,9 +196,7 @@ Core.prototype.start = function () {
 Core.prototype.main = function () {
   'use strict';
   var _this = this;
-  _this.log({
-    event: 'Main'
-  });
+
   _this.prepareFramework();
   _this.preparePlugins();
   _this.finishUpFramework();
