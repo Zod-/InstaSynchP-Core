@@ -14,6 +14,9 @@ function Core() {
 
 Core.prototype.createPluginsButton = function () {
   'use strict';
+  this.log({
+    event: 'Create plugins button'
+  });
   var clone = $('#user_dropdown').clone();
   clone.attr('id', 'plugin_dropdown');
   $('a', clone).attr('href', '#').attr('onClick', '');
@@ -166,7 +169,6 @@ Core.prototype.fireConnect = function () {
   }
 };
 
-
 Core.prototype.fireExecuteOnce = function () {
   'use strict';
   this.isMainLoaded = true;
@@ -211,11 +213,17 @@ window.plugins = window.plugins || {};
 window.plugins.core = new Core();
 if (window.document.readyState === 'complete') {
   window.plugins.core.main();
+  window.plugins.core.log({
+    event: 'Page was already loaded'
+  });
 } else {
   window.addEventListener('load', function () {
     'use strict';
     if (!window.plugins.core.isMainLoaded) {
       window.plugins.core.main();
     }
+    window.plugins.core.log({
+      event: 'Page load'
+    });
   }, false);
 }
