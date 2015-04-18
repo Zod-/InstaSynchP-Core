@@ -2,7 +2,7 @@
 // @name         InstaSynchP-Core
 // @namespace    InstaSynchP
 // @description  The core for a modular plugin system for InstaSync
-// @version      1.4.3
+// @version      1.4.4
 // @author       Zod-
 // @source       https://github.com/Zod-/InstaSynchP-Core
 // @license      MIT
