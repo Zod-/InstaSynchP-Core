@@ -1,6 +1,6 @@
 {
   "name": "InstaSynchP-Core",
-  "version": "1.4.4",
+  "version": "1.4.4.1",
   "description": "The core for a modular plugin system for InstaSync",
   "main": "Gruntfile.js",
   "scripts": {
@@ -71,7 +71,7 @@
         "version": "37738"
       }, {
         "id": "5651-instasynchp-event-hooks",
-        "version": "46926"
+        "version": "46928"
       }]
     },
     "other": {

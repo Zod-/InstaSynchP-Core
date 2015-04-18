@@ -2,7 +2,7 @@
 // @name         InstaSynchP Core
 // @namespace    InstaSynchP
 // @description  The core for a modular plugin system for InstaSync
-// @version      1.4.4
+// @version      1.4.4.1
 // @author       Zod-
 // @source       https://github.com/Zod-/InstaSynchP-Core
 // @license      MIT
@@ -16,7 +16,7 @@
 // @require      https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/code.js?version=43457
 // @require      https://greasyfork.org/scripts/5719-instasynchp-settings/code/code.js?version=42666
 // @require      https://greasyfork.org/scripts/6332-instasynchp-commands/code/code.js?version=37738
-// @require      https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/code.js?version=46926
+// @require      https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/code.js?version=46928
 // @include      *://instasync.com/r/*
 // @include      *://*.instasync.com/r/*
 // @grant        none
@@ -220,7 +220,7 @@ Events.prototype.fire = function (eventName, parameters, preOld) {
 
 function Core() {
   'use strict';
-  this.version = '1.4.4';
+  this.version = '1.4.4.1';
   this.name = 'InstaSynchP Core';
   this.connected = false;
   this.Events = Events;
