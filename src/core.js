@@ -160,8 +160,10 @@ Core.prototype.fireConnect = function () {
   'use strict';
   var _this = this;
   events.fire('PreConnect');
-  //if the script was loading slow and we are already connected
   if (thisUser()) {
+    _this.log({
+      event: 'Script was loading slowly'
+    });
     _this.onConnect();
   }
 };
