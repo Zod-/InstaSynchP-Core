@@ -61,9 +61,6 @@ Core.prototype.prepareFramework = function () {
   plugins.commands.executeOnceCore();
   plugins.pluginManager.executeOnceCore();
   events.on(plugins.settings, 'ExecuteOnce', plugins.settings.executeOnceCore);
-  events.on(_this, 'PreConnect, Disconnect', function () {
-    events.fire('ResetVariables');
-  });
 };
 
 Core.prototype.finishUpFramework = function () {
@@ -156,6 +153,17 @@ Core.prototype.preparePlugins = function () {
   }
 };
 
+Core.prototype.slowLoadingCompensate = function () {
+  'use strict';
+  this.connected = true;
+  events.fire('Connected');
+  events.fire('Joining');
+  events.fire('Joined');
+  window.room.playlist.load(window.room.playlist.videos);
+  window.room.userlist.load(window.room.userlist.users);
+  reloadPlayer();
+};
+
 Core.prototype.fireConnect = function () {
   'use strict';
   var _this = this;
@@ -164,7 +172,7 @@ Core.prototype.fireConnect = function () {
     _this.log({
       event: 'Script was loading slowly'
     });
-    _this.onConnect();
+    _this.slowLoadingCompensate();
   }
 };
 
@@ -193,6 +201,9 @@ Core.prototype.start = function () {
   });
   _this.fireExecuteOnce();
   _this.fireConnect();
+  events.on(_this, 'PreConnect, Disconnect', function fireResetVariables() {
+    events.fire('ResetVariables');
+  });
 };
 
 Core.prototype.main = function () {

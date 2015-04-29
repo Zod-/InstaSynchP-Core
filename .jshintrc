@@ -1,12 +1,13 @@
 {
   "globals": {
-    "commands":  true,
-    "logger":    true,
-    "events":    true,
-    "Events":    true,
-    "plugins":   true,
-    "isUdef":    true,
-    "thisUser":  true
+    "commands":     true,
+    "logger":       true,
+    "events":       true,
+    "Events":       true,
+    "plugins":      true,
+    "isUdef":       true,
+    "thisUser":     true,
+    "reloadPlayer": true
   },
   "qunit":       true,
   "jquery":      true,
