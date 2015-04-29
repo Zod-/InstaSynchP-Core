@@ -2,7 +2,7 @@
 // @name         InstaSynchP Core
 // @namespace    InstaSynchP
 // @description  The core for a modular plugin system for InstaSync
-// @version      1.4.4.1
+// @version      1.4.5
 // @author       Zod-
 // @source       https://github.com/Zod-/InstaSynchP-Core
 // @license      MIT
@@ -10,13 +10,13 @@
 // @require      https://greasyfork.org/scripts/2855-gm-config/code/code.js?version=33973
 // @require      https://greasyfork.org/scripts/2857-jquery-bind-first/code/code.js?version=26080
 // @require      https://greasyfork.org/scripts/8159-log4javascript/code/code.js?version=37575
-// @require      https://greasyfork.org/scripts/5647-instasynchp-library/code/code.js?version=41059
+// @require      https://greasyfork.org/scripts/5647-instasynchp-library/code/code.js?version=49210
 // @require      https://greasyfork.org/scripts/8177-instasynchp-logger/code/code.js?version=37872
 // @require      https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/code.js?version=42665
 // @require      https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/code.js?version=43457
 // @require      https://greasyfork.org/scripts/5719-instasynchp-settings/code/code.js?version=42666
-// @require      https://greasyfork.org/scripts/6332-instasynchp-commands/code/code.js?version=37738
-// @require      https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/code.js?version=46928
+// @require      https://greasyfork.org/scripts/6332-instasynchp-commands/code/code.js?version=49212
+// @require      https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/code.js?version=49211
 // @include      *://instasync.com/r/*
 // @include      *://*.instasync.com/r/*
 // @grant        none
@@ -220,7 +220,7 @@ Events.prototype.fire = function (eventName, parameters, preOld) {
 
 function Core() {
   'use strict';
-  this.version = '1.4.4.1';
+  this.version = '1.4.5';
   this.name = 'InstaSynchP Core';
   this.connected = false;
   this.Events = Events;
@@ -281,9 +281,6 @@ Core.prototype.prepareFramework = function () {
   plugins.commands.executeOnceCore();
   plugins.pluginManager.executeOnceCore();
   events.on(plugins.settings, 'ExecuteOnce', plugins.settings.executeOnceCore);
-  events.on(_this, 'PreConnect, Disconnect', function () {
-    events.fire('ResetVariables');
-  });
 };
 
 Core.prototype.finishUpFramework = function () {
@@ -376,13 +373,26 @@ Core.prototype.preparePlugins = function () {
   }
 };
 
+Core.prototype.slowLoadingCompensate = function () {
+  'use strict';
+  this.connected = true;
+  events.fire('Connected');
+  events.fire('Joining');
+  events.fire('Joined');
+  window.room.playlist.load(window.room.playlist.videos);
+  window.room.userlist.load(window.room.userlist.users);
+  reloadPlayer();
+};
+
 Core.prototype.fireConnect = function () {
   'use strict';
   var _this = this;
   events.fire('PreConnect');
-  //if the script was loading slow and we are already connected
   if (thisUser()) {
-    _this.onConnect();
+    _this.log({
+      event: 'Script was loading slowly'
+    });
+    _this.slowLoadingCompensate();
   }
 };
 
@@ -411,6 +421,9 @@ Core.prototype.start = function () {
   });
   _this.fireExecuteOnce();
   _this.fireConnect();
+  events.on(_this, 'PreConnect, Disconnect', function fireResetVariables() {
+    events.fire('ResetVariables');
+  });
 };
 
 Core.prototype.main = function () {
