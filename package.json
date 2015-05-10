@@ -43,9 +43,6 @@
         "id": "2859-video-url-parser",
         "version": "30624"
       }, {
-        "id": "2855-gm-config",
-        "version": "33973"
-      }, {
         "id": "2857-jquery-bind-first",
         "version": "26080"
       }, {
@@ -53,19 +50,16 @@
         "version": "37575"
       }, {
         "id": "5647-instasynchp-library",
-        "version": "49210"
+        "version": "51269"
       }, {
         "id": "8177-instasynchp-logger",
-        "version": "37872"
-      }, {
-        "id": "6573-instasynchp-plugin-manager",
-        "version": "42665"
+        "version": "51298"
       }, {
         "id": "5718-instasynchp-cssloader",
         "version": "43457"
       }, {
         "id": "5719-instasynchp-settings",
-        "version": "42666"
+        "version": "51303"
       }, {
         "id": "6332-instasynchp-commands",
         "version": "49212"
