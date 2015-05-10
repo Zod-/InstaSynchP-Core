@@ -2,19 +2,17 @@
 // @name         InstaSynchP Core
 // @namespace    InstaSynchP
 // @description  The core for a modular plugin system for InstaSync
-// @version      1.4.5
+// @version      1.4.6
 // @author       Zod-
 // @source       https://github.com/Zod-/InstaSynchP-Core
 // @license      MIT
 // @require      https://greasyfork.org/scripts/2859-video-url-parser/code/code.js?version=30624
-// @require      https://greasyfork.org/scripts/2855-gm-config/code/code.js?version=33973
 // @require      https://greasyfork.org/scripts/2857-jquery-bind-first/code/code.js?version=26080
 // @require      https://greasyfork.org/scripts/8159-log4javascript/code/code.js?version=37575
-// @require      https://greasyfork.org/scripts/5647-instasynchp-library/code/code.js?version=49210
-// @require      https://greasyfork.org/scripts/8177-instasynchp-logger/code/code.js?version=37872
-// @require      https://greasyfork.org/scripts/6573-instasynchp-plugin-manager/code/code.js?version=42665
+// @require      https://greasyfork.org/scripts/5647-instasynchp-library/code/code.js?version=51269
+// @require      https://greasyfork.org/scripts/8177-instasynchp-logger/code/code.js?version=51298
 // @require      https://greasyfork.org/scripts/5718-instasynchp-cssloader/code/code.js?version=43457
-// @require      https://greasyfork.org/scripts/5719-instasynchp-settings/code/code.js?version=42666
+// @require      https://greasyfork.org/scripts/5719-instasynchp-settings/code/code.js?version=51303
 // @require      https://greasyfork.org/scripts/6332-instasynchp-commands/code/code.js?version=49212
 // @require      https://greasyfork.org/scripts/5651-instasynchp-event-hooks/code/code.js?version=49211
 // @include      *://instasync.com/r/*
@@ -220,7 +218,7 @@ Events.prototype.fire = function (eventName, parameters, preOld) {
 
 function Core() {
   'use strict';
-  this.version = '1.4.5';
+  this.version = '1.4.6';
   this.name = 'InstaSynchP Core';
   this.connected = false;
   this.Events = Events;
@@ -232,36 +230,9 @@ function Core() {
   this.isMainLoaded = false;
 }
 
-Core.prototype.createPluginsButton = function () {
-  'use strict';
-  var clone = $('#user_dropdown').clone();
-  clone.attr('id', 'plugin_dropdown');
-  $('a', clone).attr('href', '#').attr('onClick', '');
-  $('.fa-user', clone).toggleClass('fa-user').toggleClass('fa-plug').before(
-    $('#tabs_chat > a > span').clone().toggleClass('updates')
-  );
-  $('#my_room_link', clone).parent().remove();
-  $('#logged_in_as', clone)
-    .attr('id', 'plugins_settings_title').text('Plugins');
-  $('.dropdown-menu > li:first-child > a', clone)
-    .attr('id', 'plugin_settings');
-  $('#logout', clone).attr('id', 'plugin_manager').text('').append(
-    $('#tabs_chat > a > span').clone().toggleClass('updates')
-  ).append(
-    $('<i>', {
-      'class': 'fa fa-database'
-    })
-  ).append(' Manager');
-  $('.fa-cog', clone).toggleClass('fa-cogs').toggleClass('fa-cog');
-  $('#user_dropdown').before(clone);
-  $('#plugin_dropdown').show();
-};
-
 Core.prototype.executeOnceCore = function () {
   'use strict';
-  var _this = this;
-  window.events = new _this.Events();
-  _this.createPluginsButton();
+  window.events = new this.Events();
 };
 
 Core.prototype.resetVariables = function () {
@@ -279,8 +250,7 @@ Core.prototype.prepareFramework = function () {
     event: 'Prepare Framework'
   });
   plugins.commands.executeOnceCore();
-  plugins.pluginManager.executeOnceCore();
-  events.on(plugins.settings, 'ExecuteOnce', plugins.settings.executeOnceCore);
+  plugins.settings.executeOnceCore();
 };
 
 Core.prototype.finishUpFramework = function () {
@@ -331,33 +301,6 @@ Core.prototype.preparePlugin = function (plugin) {
   events.on(plugin, 'ResetVariables', plugin.resetVariables);
 
   commands.bind(plugin.commands);
-
-  //refactor these into the plugins later
-  if (Array.isArray(plugin.settings)) {
-    plugins.settings.fields = plugins.settings.fields.concat(plugin.settings);
-  }
-
-  if (Array.isArray(plugin.styles)) {
-    plugin.styles.forEach(function (style) {
-      plugins.settings.fields.push({
-        'label': '',
-        'id': style.name + '-css-content',
-        'type': 'hidden',
-        'value': '',
-        'section': ['Core']
-      });
-      plugins.settings.fields.push({
-        'label': '',
-        'id': style.name + '-css-url',
-        'type': 'hidden',
-        'value': '',
-        'section': ['Core']
-      });
-      events.on(plugins.cssLoader, 'ExecuteOnce', function () {
-        plugins.cssLoader.addStyle(style);
-      });
-    });
-  }
 };
 
 Core.prototype.preparePlugins = function () {
