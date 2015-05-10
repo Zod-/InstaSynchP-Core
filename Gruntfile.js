@@ -49,13 +49,13 @@ module.exports = function (grunt) {
     },
     concat: {
       dist: {
-        src: ['src/meta.js', 'src/events.js', 'src/core.js'],
+        src: ['tmp/meta.js', 'src/events.js', 'src/core.js'],
         dest: 'dist/InstaSynchP-Core.user.js'
       }
     },
     'userscript-meta': {
       build: {
-        dest: 'src/meta.js'
+        dest: 'tmp/meta.js'
       }
     },
     shell: {
