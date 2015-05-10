@@ -12,36 +12,9 @@ function Core() {
   this.isMainLoaded = false;
 }
 
-Core.prototype.createPluginsButton = function () {
-  'use strict';
-  var clone = $('#user_dropdown').clone();
-  clone.attr('id', 'plugin_dropdown');
-  $('a', clone).attr('href', '#').attr('onClick', '');
-  $('.fa-user', clone).toggleClass('fa-user').toggleClass('fa-plug').before(
-    $('#tabs_chat > a > span').clone().toggleClass('updates')
-  );
-  $('#my_room_link', clone).parent().remove();
-  $('#logged_in_as', clone)
-    .attr('id', 'plugins_settings_title').text('Plugins');
-  $('.dropdown-menu > li:first-child > a', clone)
-    .attr('id', 'plugin_settings');
-  $('#logout', clone).attr('id', 'plugin_manager').text('').append(
-    $('#tabs_chat > a > span').clone().toggleClass('updates')
-  ).append(
-    $('<i>', {
-      'class': 'fa fa-database'
-    })
-  ).append(' Manager');
-  $('.fa-cog', clone).toggleClass('fa-cogs').toggleClass('fa-cog');
-  $('#user_dropdown').before(clone);
-  $('#plugin_dropdown').show();
-};
-
 Core.prototype.executeOnceCore = function () {
   'use strict';
-  var _this = this;
-  window.events = new _this.Events();
-  _this.createPluginsButton();
+  window.events = new this.Events();
 };
 
 Core.prototype.resetVariables = function () {
@@ -59,8 +32,7 @@ Core.prototype.prepareFramework = function () {
     event: 'Prepare Framework'
   });
   plugins.commands.executeOnceCore();
-  plugins.pluginManager.executeOnceCore();
-  events.on(plugins.settings, 'ExecuteOnce', plugins.settings.executeOnceCore);
+  plugins.settings.executeOnceCore();
 };
 
 Core.prototype.finishUpFramework = function () {
@@ -111,33 +83,6 @@ Core.prototype.preparePlugin = function (plugin) {
   events.on(plugin, 'ResetVariables', plugin.resetVariables);
 
   commands.bind(plugin.commands);
-
-  //refactor these into the plugins later
-  if (Array.isArray(plugin.settings)) {
-    plugins.settings.fields = plugins.settings.fields.concat(plugin.settings);
-  }
-
-  if (Array.isArray(plugin.styles)) {
-    plugin.styles.forEach(function (style) {
-      plugins.settings.fields.push({
-        'label': '',
-        'id': style.name + '-css-content',
-        'type': 'hidden',
-        'value': '',
-        'section': ['Core']
-      });
-      plugins.settings.fields.push({
-        'label': '',
-        'id': style.name + '-css-url',
-        'type': 'hidden',
-        'value': '',
-        'section': ['Core']
-      });
-      events.on(plugins.cssLoader, 'ExecuteOnce', function () {
-        plugins.cssLoader.addStyle(style);
-      });
-    });
-  }
 };
 
 Core.prototype.preparePlugins = function () {
