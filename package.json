@@ -1,6 +1,6 @@
 {
   "name": "InstaSynchP-Core",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "description": "The core for a modular plugin system for InstaSync",
   "main": "Gruntfile.js",
   "scripts": {
